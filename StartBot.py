@@ -1,0 +1,23 @@
+from telegram import Bot
+from telegram.ext import Updater, CommandHandler, Filters, MessageHandler, ConversationHandler
+from menuBot.function import *
+
+
+bot = Bot(token='5603880098:AAH8N3PibSyQkSCOt4-WfBtFTf1_i8EzPcA')
+updater = Updater(token='5603880098:AAH8N3PibSyQkSCOt4-WfBtFTf1_i8EzPcA')
+dispatcher = updater.dispatcher
+
+start_handler = CommandHandler('start', start)
+receiving_data_handler = MessageHandler(Filters.text & (~Filters.command), receiving_data)
+mes_data_handler = CommandHandler('end', cancel)
+
+
+conv_handler = ConversationHandler(entry_points=[start_handler],
+                                   states={start_calc: [receiving_data_handler]},
+                                   fallbacks=[mes_data_handler])
+
+
+dispatcher.add_handler(conv_handler)
+
+updater.start_polling()
+updater.idle()
